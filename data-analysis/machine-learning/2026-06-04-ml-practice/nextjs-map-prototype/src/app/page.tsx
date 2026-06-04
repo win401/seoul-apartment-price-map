@@ -9,6 +9,11 @@ type Candidate = {
   dong: string;
   apt: string;
   areaBucket: number;
+  addrKr: string;
+  geocodeQuery: string;
+  geocodeStatus: "pending" | "ok" | "failed";
+  lat?: number;
+  lng?: number;
   basePriceEok: number;
   predFuturePriceEok: number;
   actualFuturePriceEok: number;
@@ -178,7 +183,7 @@ export default function Home() {
                   left: `${candidate.x}%`,
                   top: `${candidate.y}%`,
                 }}
-                title={`${candidate.dong} ${candidate.apt}`}
+                title={`${candidate.dong} ${candidate.apt} ${candidate.addrKr}`}
                 onClick={() => setSelectedId(candidate.id)}
               >
                 {Math.round(candidate.predGrowthRate)}
@@ -196,6 +201,7 @@ export default function Home() {
             <p>
               {selected.dong} · {selected.areaBucket}㎡대
             </p>
+            <p>{selected.addrKr}</p>
           </div>
 
           <div className={styles.priceFlow}>
@@ -238,6 +244,18 @@ export default function Home() {
               <dt>거래 신뢰도</dt>
               <dd>
                 {selected.baseCount}건 / {selected.futureCount}건
+              </dd>
+            </div>
+            <div>
+              <dt>좌표 상태</dt>
+              <dd>{selected.geocodeStatus === "ok" ? "실좌표" : "대기"}</dd>
+            </div>
+            <div>
+              <dt>위도/경도</dt>
+              <dd>
+                {selected.lat && selected.lng
+                  ? `${selected.lat.toFixed(4)}, ${selected.lng.toFixed(4)}`
+                  : "미생성"}
               </dd>
             </div>
           </dl>

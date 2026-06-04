@@ -47,6 +47,8 @@ nextjs-map-prototype/
 구현된 것:
 
 - 예측 상승률 상위 후보 JSON import
+- 원본 거래 데이터 기반 주소 병합
+- Kakao REST API geocoding 스크립트
 - 투자 후보 리스트
 - 임시 좌표 기반 지도형 마커
 - 후보 상세 패널
@@ -59,6 +61,17 @@ nextjs-map-prototype/
 cd nextjs-map-prototype
 npm run dev
 ```
+
+좌표 생성:
+
+```bash
+KAKAO_REST_API_KEY=your_key npm run geocode:kakao
+```
+
+좌표 생성 후:
+
+- `src/data/candidates.json`에 `lat`, `lng`, `resolvedAddress`가 추가된다.
+- 임시 x/y 좌표가 실제 위도/경도 범위 기준 화면 좌표로 다시 계산된다.
 
 ## Data Pipeline Draft
 
