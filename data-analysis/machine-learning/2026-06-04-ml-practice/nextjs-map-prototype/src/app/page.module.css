@@ -26,6 +26,7 @@
   font-size: 34px;
   line-height: 1.16;
   font-weight: 800;
+  overflow-wrap: anywhere;
 }
 
 .modelBadge {
@@ -87,6 +88,7 @@
 .sidebar,
 .mapPanel,
 .detail {
+  min-width: 0;
   min-height: 680px;
   border: 1px solid #d8e3dd;
   border-radius: 8px;
@@ -173,6 +175,7 @@
 .listItem strong,
 .listItem small {
   display: block;
+  overflow-wrap: anywhere;
 }
 
 .listItem small {
@@ -205,57 +208,38 @@
   white-space: nowrap;
 }
 
-.mapCanvas {
-  position: relative;
+.leafletMap {
   min-height: 612px;
+  height: 612px;
   margin-top: 16px;
   overflow: hidden;
   border-radius: 8px;
   border: 1px solid #cbd9d2;
-  background:
-    linear-gradient(90deg, rgba(42, 102, 85, 0.07) 1px, transparent 1px),
-    linear-gradient(rgba(42, 102, 85, 0.07) 1px, transparent 1px),
-    #edf4ef;
-  background-size: 56px 56px;
 }
 
-.river {
-  position: absolute;
-  left: -6%;
-  top: 47%;
-  width: 112%;
-  height: 78px;
-  transform: rotate(-8deg);
-  border-radius: 999px;
-  background: rgba(75, 148, 185, 0.28);
+.mapLoading {
+  display: grid;
+  place-items: center;
+  min-height: 612px;
+  height: 612px;
+  margin-top: 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd9d2;
+  background: #edf4ef;
+  color: #65756e;
+  font-weight: 800;
 }
 
-.gridLineOne,
-.gridLineTwo {
-  position: absolute;
-  inset: auto;
-  background: rgba(71, 88, 78, 0.14);
+.leafletMarkerShell {
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 0;
 }
 
-.gridLineOne {
-  left: 18%;
-  top: 0;
-  width: 2px;
-  height: 100%;
-}
-
-.gridLineTwo {
-  left: 0;
-  top: 32%;
-  width: 100%;
-  height: 2px;
-}
-
-.marker {
-  position: absolute;
-  width: 36px;
-  height: 36px;
-  transform: translate(-50%, -50%);
+.leafletMarkerShell span {
+  display: grid;
+  place-items: center;
   border: 2px solid #ffffff;
   border-radius: 50%;
   color: #ffffff;
@@ -265,22 +249,23 @@
   box-shadow: 0 8px 22px rgba(23, 33, 28, 0.22);
 }
 
-.markerActive {
-  width: 48px;
-  height: 48px;
+.leafletMarkerActive {
   z-index: 5;
+}
+
+.leafletMarkerActive span {
   outline: 4px solid rgba(22, 131, 95, 0.2);
 }
 
-.high {
+.gradeHigh {
   background: #16835f;
 }
 
-.medium {
+.gradeMedium {
   background: #d58b19;
 }
 
-.low {
+.gradeLow {
   background: #697a72;
 }
 
@@ -306,7 +291,7 @@
   margin: 16px 0;
 }
 
-.priceFlow div {
+.priceCard {
   display: grid;
   gap: 5px;
   padding: 13px;
@@ -330,7 +315,7 @@
   gap: 10px;
 }
 
-.metrics div {
+.metricCard {
   min-height: 76px;
   padding: 12px;
   border: 1px solid #e1e9e5;
@@ -357,6 +342,45 @@
   color: #d2ddd7;
   font-size: 13px;
   line-height: 1.6;
+}
+
+.popup {
+  display: grid;
+  gap: 5px;
+  min-width: 190px;
+  color: #17211c;
+  font-family: Apple SD Gothic Neo, Arial, sans-serif;
+}
+
+.popup strong {
+  font-size: 15px;
+}
+
+.popup span {
+  color: #5d6f66;
+  font-size: 12px;
+}
+
+.popup dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.popup div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.popup dt {
+  color: #6b7a73;
+}
+
+.popup dd {
+  margin: 0;
+  font-weight: 800;
 }
 
 @media (max-width: 1200px) {
@@ -386,7 +410,8 @@
   }
 
   .topbar h1 {
-    font-size: 26px;
+    font-size: 25px;
+    line-height: 1.22;
   }
 
   .sidebar,
@@ -395,8 +420,9 @@
     min-height: auto;
   }
 
-  .mapCanvas {
+  .leafletMap {
     min-height: 520px;
+    height: 520px;
   }
 }
 

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import data from "../data/candidates.json";
+import ClientInvestmentMap from "./ClientInvestmentMap";
 import styles from "./page.module.css";
 
 type Candidate = {
@@ -31,6 +32,11 @@ type Candidate = {
 };
 
 const candidates = data.items as Candidate[];
+const gradeClassName = {
+  high: styles.gradeHigh,
+  medium: styles.gradeMedium,
+  low: styles.gradeLow,
+};
 
 function formatEok(value: number) {
   return `${value.toFixed(2)}억`;
@@ -169,32 +175,18 @@ export default function Home() {
             <span>투자금 기준 {data.meta.investmentLimitEok}억</span>
           </div>
 
-          <div className={styles.mapCanvas}>
-            <div className={styles.river} />
-            <div className={styles.gridLineOne} />
-            <div className={styles.gridLineTwo} />
-            {visibleCandidates.slice(0, 48).map((candidate) => (
-              <button
-                key={candidate.id}
-                className={`${styles.marker} ${styles[candidate.grade]} ${
-                  selected.id === candidate.id ? styles.markerActive : ""
-                }`}
-                style={{
-                  left: `${candidate.x}%`,
-                  top: `${candidate.y}%`,
-                }}
-                title={`${candidate.dong} ${candidate.apt} ${candidate.addrKr}`}
-                onClick={() => setSelectedId(candidate.id)}
-              >
-                {Math.round(candidate.predGrowthRate)}
-              </button>
-            ))}
-          </div>
+          <ClientInvestmentMap
+            candidates={visibleCandidates.slice(0, 80)}
+            selectedId={selected.id}
+            onSelect={setSelectedId}
+          />
         </section>
 
         <aside className={styles.detail}>
           <div className={styles.detailTitle}>
-            <span className={`${styles.gradePill} ${styles[selected.grade]}`}>
+            <span
+              className={`${styles.gradePill} ${gradeClassName[selected.grade]}`}
+            >
               {selected.gradeLabel}
             </span>
             <h2>{selected.apt}</h2>
@@ -205,52 +197,52 @@ export default function Home() {
           </div>
 
           <div className={styles.priceFlow}>
-            <div>
+            <div className={styles.priceCard}>
               <span>2014 기준가</span>
               <strong>{formatEok(selected.basePriceEok)}</strong>
             </div>
-            <div>
+            <div className={styles.priceCard}>
               <span>2017 예측가</span>
               <strong>{formatEok(selected.predFuturePriceEok)}</strong>
             </div>
-            <div>
+            <div className={styles.priceCard}>
               <span>2017 실제가</span>
               <strong>{formatEok(selected.actualFuturePriceEok)}</strong>
             </div>
           </div>
 
           <dl className={styles.metrics}>
-            <div>
+            <div className={styles.metricCard}>
               <dt>예측 상승률</dt>
               <dd>{formatRate(selected.predGrowthRate)}</dd>
             </div>
-            <div>
+            <div className={styles.metricCard}>
               <dt>실제 상승률</dt>
               <dd>{formatRate(selected.actualGrowthRate)}</dd>
             </div>
-            <div>
+            <div className={styles.metricCard}>
               <dt>예측 상승액</dt>
               <dd>{formatEok(selected.predGrowthAmountEok)}</dd>
             </div>
-            <div>
+            <div className={styles.metricCard}>
               <dt>실제 상승액</dt>
               <dd>{formatEok(selected.actualGrowthAmountEok)}</dd>
             </div>
-            <div>
+            <div className={styles.metricCard}>
               <dt>절대오차</dt>
               <dd>{formatEok(selected.absErrorEok)}</dd>
             </div>
-            <div>
+            <div className={styles.metricCard}>
               <dt>거래 신뢰도</dt>
               <dd>
                 {selected.baseCount}건 / {selected.futureCount}건
               </dd>
             </div>
-            <div>
+            <div className={styles.metricCard}>
               <dt>좌표 상태</dt>
               <dd>{selected.geocodeStatus === "ok" ? "실좌표" : "대기"}</dd>
             </div>
-            <div>
+            <div className={styles.metricCard}>
               <dt>위도/경도</dt>
               <dd>
                 {selected.lat && selected.lng
@@ -263,8 +255,9 @@ export default function Home() {
           <div className={styles.note}>
             <strong>다음 작업</strong>
             <p>
-              현재 마커는 임시 좌표다. 주소 기반 좌표 변환을 붙이면 실제
-              Kakao/Naver/Leaflet 지도 위에 같은 데이터를 표시할 수 있다.
+              현재는 Kakao 주소 좌표를 Leaflet 지도에 표시한 상태다. 다음은
+              지도 화면 범위 필터, 단지 검색, 3억 이하 후보 추천 UX를 붙이면
+              된다.
             </p>
           </div>
         </aside>
