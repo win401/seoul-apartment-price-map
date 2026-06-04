@@ -34,6 +34,32 @@
 - 예상 상승액/상승률 표시
 - 동별 평균 상승률 레이어
 
+## Current Prototype
+
+위치:
+
+```text
+nextjs-map-prototype/
+```
+
+현재는 실제 지도 API를 붙이기 전 단계다.
+
+구현된 것:
+
+- 예측 상승률 상위 후보 JSON import
+- 투자 후보 리스트
+- 임시 좌표 기반 지도형 마커
+- 후보 상세 패널
+- 2014 기준가 / 2017 예측가 / 2017 실제가 비교
+- 예측 상승률과 실제 상승률 비교
+
+실행:
+
+```bash
+cd nextjs-map-prototype
+npm run dev
+```
+
 ## Data Pipeline Draft
 
 1. `seoul_train_cleaned_baseline.csv` 사용
