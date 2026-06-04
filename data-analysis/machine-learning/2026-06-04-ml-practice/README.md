@@ -39,6 +39,8 @@
 - 서울 제거된 이상치 데이터: `data/processed/seoul_train_removed_outliers.csv`, 298행
 - 3년 후 투자 후보 데이터: `data/processed/three_year_investment_candidates_2014_2017.csv`
 - 지도 샘플 export 데이터: `data/processed/map_export_sample_top_growth_2014_2017.csv`
+- 3년 후 예측 검증 데이터: `data/processed/three_year_prediction_validation_results.csv`
+- 지도 예측 샘플 export 데이터: `data/processed/map_export_predicted_top_growth_2014_2017.csv`
 - 제출 양식: `submission.csv`, 5,463행, 2열
 - 보조 데이터: `day_care_center.csv`, `park.csv`
 - 주요 컬럼: `apartment_id`, `city`, `dong`, `apt`, `exclusive_use_area`, `year_of_completion`, `transaction_year_month`, `transaction_date`, `floor`
@@ -89,6 +91,9 @@
 - `reports/ml-practice-persona.md`
 - `reports/nextjs-map-service-plan.md`
 - `reports/three_year_investment_prediction.md`
+- `reports/three_year_prediction_model.md`
+- `reports/three_year_prediction_model_metrics.csv`
+- `reports/three_year_prediction_high_error_samples.csv`
 - `outputs/01_seoul_price_distribution.svg`
 - `outputs/02_seoul_price_per_pyeong_distribution.svg`
 - `outputs/03_median_price_per_pyeong_by_year.svg`
@@ -96,6 +101,9 @@
 - `outputs/05_baseline_actual_vs_predicted.png`
 - `outputs/06_baseline_residual_distribution.png`
 - `outputs/07_three_year_growth_distribution.png`
+- `outputs/08_three_year_actual_vs_predicted.png`
+- `outputs/09_three_year_growth_actual_vs_predicted.png`
+- `outputs/10_three_year_abs_error_distribution.png`
 
 ## Outlier Check
 
@@ -144,6 +152,8 @@
   - 위치 정보 없이 수치형 변수만 사용하면 평균 오차가 약 1.22억 원까지 내려간다.
   - 다음 성능 개선의 핵심은 `dong`, `apt` 같은 위치/단지 정보다.
   - 2014년 3억 이하 후보를 2017년과 비교한 첫 백테스트에서, 거래 수 필터 통과 후보 1,292개의 상승률 중앙값은 약 26.35%다.
+  - 2014년 기준 정보로 2017년 가격을 예측한 첫 모델의 MAE는 약 0.1854억 원이다.
+  - 상승/하락 방향 정확도는 98.76%다.
 
 ## Portfolio Potential
 
@@ -166,6 +176,6 @@
 ## Next Action
 
 - Jupyter에서 `notebooks/04_three_year_investment_prediction.ipynb`를 실행해 3억 투자자 기준 후보를 확인한다.
-- 상위 상승률 후보가 실제로 말이 되는지 샘플을 검토한다.
-- 3년 후 가격 예측 모델을 만든다.
+- 3년 후 예측 모델의 오차가 큰 샘플을 검토한다.
+- 예측 상승률 상위 후보가 실제 상승률도 높았는지 비교한다.
 - 지도 서비스에 필요한 좌표 데이터를 붙이는 방법을 결정한다.

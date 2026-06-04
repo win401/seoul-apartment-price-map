@@ -1,0 +1,2 @@
+model,rows,train_rows,valid_rows,mae_manwon,mae_eok,rmse_manwon,rmse_eok,r2,direction_accuracy
+3년 후 가격 부스팅 모델,1292,969,323,1854.1,0.1854,2407.39,0.2407,0.8718,0.9876
