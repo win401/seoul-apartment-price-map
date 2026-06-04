@@ -1,0 +1,31 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# Jupyter
+*/.ipynb_checkpoints/
+
+# Large class datasets
+data-analysis/**/data/raw/**
+data-analysis/**/data/processed/*.csv
+data-analysis/**/data/processed/*.parquet
+data-analysis/**/data/processed/*.pkl
+data-analysis/**/data/processed/*.joblib
+
+# Archives and generated heavy assets
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# Keep lightweight reports, notebooks, and charts tracked.
+!data-analysis/**/data/raw/.gitkeep
+!data-analysis/**/data/processed/.gitkeep
+!data-analysis/**/data/processed/README.md
