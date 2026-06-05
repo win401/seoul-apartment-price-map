@@ -8,6 +8,7 @@
 
 - 배포 URL: https://nextjs-map-prototype.vercel.app
 - 웹앱 폴더: `nextjs-map-prototype/`
+- 포트폴리오 케이스 스터디: `portfolio-case-study.md`
 
 ## Project Goal
 
