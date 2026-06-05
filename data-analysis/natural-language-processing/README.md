@@ -23,6 +23,9 @@
 - 네이버 뉴스 Open API 연동
 - RSS XML 파싱
 - Next.js 기반 뉴스 검색 UI
+- CSV 메뉴 데이터 기반 추천 앱
+- 자연어 의도 키워드 확장
+- Next.js 기반 메뉴 추천 UI
 
 ## Portfolio Direction
 

@@ -31,6 +31,7 @@
 9. 코사인 유사도로 간단한 FAQ 유사도 비교
 10. 고시원 SaaS / 크몽 프로젝트 적용 아이디어 정리
 11. Gradio 실습 노트북을 Next.js 뉴스 검색 화면으로 전환
+12. 맛집 메뉴 CSV 데이터로 자연어 메뉴 추천 앱 구현
 
 ## Files
 
@@ -45,6 +46,12 @@ notes/
 nextjs-news-search/
   src/app/api/news/route.ts
   src/app/lib/newsSearch.ts
+  src/app/page.tsx
+
+nextjs-menu-recommender/
+  data/menu-data.csv
+  src/app/api/recommend/route.ts
+  src/app/lib/menuRecommend.ts
   src/app/page.tsx
 
 reports/
@@ -102,3 +109,19 @@ NAVER_CLIENT_SECRET=your_client_secret
 ```
 
 키가 없거나 네트워크 호출이 실패하면 샘플 기사로 fallback하여 TF-IDF 검색 UI는 계속 동작한다.
+
+Next.js 메뉴 추천 앱을 실행하려면:
+
+```bash
+cd nextjs-menu-recommender
+npm install
+npm run dev -- --port 3012
+```
+
+로컬 URL:
+
+```text
+http://localhost:3012
+```
+
+추천 앱은 `data/menu-data.csv`를 읽어 메뉴명, 카테고리, 설명을 토큰화하고 사용자의 자연어 입력과 TF-IDF 유사도를 계산한다. `해장`, `칼칼함`, `다이어트`, `든든함` 같은 표현은 의도 키워드로 확장해 추천 품질을 보정한다.
