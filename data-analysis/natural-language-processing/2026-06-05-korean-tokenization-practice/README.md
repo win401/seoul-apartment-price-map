@@ -50,9 +50,11 @@ nextjs-news-search/
   src/app/page.tsx
 
 nextjs-menu-recommender/
-  data/menu-data.csv
-  src/app/api/recommend/route.ts
-  src/app/lib/menuRecommend.ts
+  backend/
+    main.py
+    app/service.py
+    app/vision.py
+    data/menu-data.csv
   src/app/page.tsx
 
 reports/
@@ -111,7 +113,18 @@ NAVER_CLIENT_SECRET=your_client_secret
 
 키가 없거나 네트워크 호출이 실패하면 샘플 기사로 fallback하여 TF-IDF 검색 UI는 계속 동작한다.
 
-Next.js 메뉴 추천 앱을 실행하려면:
+메뉴 추천 backend를 실행하려면:
+
+```bash
+cd nextjs-menu-recommender
+cd backend
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --port 8000
+```
+
+다른 터미널에서 Next.js 메뉴 추천 앱을 실행하려면:
 
 ```bash
 cd nextjs-menu-recommender
@@ -125,4 +138,6 @@ npm run dev -- --port 3012
 http://localhost:3012
 ```
 
-추천 앱은 `data/menu-data.csv`를 읽어 메뉴명, 카테고리, 설명을 토큰화하고 사용자의 자연어 입력과 TF-IDF 유사도를 계산한다. `해장`, `칼칼함`, `다이어트`, `든든함` 같은 표현은 의도 키워드로 확장해 추천 품질을 보정한다.
+추천 앱은 Python FastAPI backend가 `backend/data/menu-data.csv`를 읽어 메뉴명, 카테고리, 설명을 토큰화하고 사용자의 자연어 입력과 TF-IDF 유사도를 계산한다. `해장`, `칼칼함`, `다이어트`, `든든함` 같은 표현은 의도 키워드로 확장해 추천 품질을 보정한다.
+
+음식 이미지를 업로드하면 `OPENAI_API_KEY`가 있을 때 Vision API로 음식명을 추정하고, 키가 없으면 파일명 기반 fallback으로 추천 흐름을 테스트한다.

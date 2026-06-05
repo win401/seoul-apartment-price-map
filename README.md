@@ -60,7 +60,7 @@ https://github.com/win401/ai-service-practice-lab
 
 ### 3. Korean Menu Recommender
 
-맛집 메뉴 CSV 데이터를 이용해 `해장 잘되는 음식`, `칼칼한 음식`, `다이어트에 좋은 음식` 같은 자연어 입력에 맞는 메뉴를 추천하는 자연어 처리 실습 프로젝트입니다.
+맛집 메뉴 CSV 데이터를 이용해 `해장 잘되는 음식`, `칼칼한 음식`, `다이어트에 좋은 음식` 같은 자연어 입력에 맞는 메뉴를 추천하고, 음식 이미지 업로드로 메뉴를 추정하는 자연어 처리/멀티모달 실습 프로젝트입니다.
 
 - Local App: `http://localhost:3012`
 - Project Path: `data-analysis/natural-language-processing/2026-06-05-korean-tokenization-practice/`
@@ -69,10 +69,12 @@ https://github.com/win401/ai-service-practice-lab
 핵심 작업:
 
 - CSV 메뉴 데이터 앱 폴더 포함
+- Python FastAPI 추천 backend 구현
 - 한국어 간이 토큰화와 조사/어미 정규화
 - TF-IDF 벡터 생성
 - 코사인 유사도 기반 메뉴 랭킹
 - 해장/칼칼함/다이어트 등 의도 키워드 확장
+- 음식 이미지 업로드 및 Vision API/fallback 연동
 - 추천 이유와 점수 분해 UI 구현
 
 ## Repository Structure
@@ -94,7 +96,7 @@ data-analysis/
       reports/                # 실습 결과 리포트
       outputs/                # 시각화/결과 이미지
       nextjs-news-search/     # TF-IDF 뉴스 검색 Next.js 앱
-      nextjs-menu-recommender/ # CSV 기반 메뉴 추천 Next.js 앱
+      nextjs-menu-recommender/ # Python backend + Next.js 메뉴 추천 앱
 
 ai-service-planning/          # AI 서비스 기획 수업 자료
 assignments/                  # 과제 제출물
@@ -156,6 +158,17 @@ NAVER_CLIENT_SECRET=your_client_secret
 ```
 
 음식 메뉴 추천:
+
+```bash
+cd data-analysis/natural-language-processing/2026-06-05-korean-tokenization-practice/nextjs-menu-recommender
+cd backend
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --port 8000
+```
+
+다른 터미널에서:
 
 ```bash
 cd data-analysis/natural-language-processing/2026-06-05-korean-tokenization-practice/nextjs-menu-recommender

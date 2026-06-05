@@ -24,6 +24,20 @@ type RecommendationResponse = {
   results: Recommendation[];
 };
 
+type ImageAnalysis = {
+  provider: string;
+  detectedName: string;
+  confidence: number;
+  visualKeywords: string[];
+  query: string;
+  note: string;
+};
+
+type ImageRecommendationResponse = {
+  analysis: ImageAnalysis;
+  recommendation: RecommendationResponse;
+};
+
 const examples = [
   "해장 잘되는 음식",
   "칼칼한 국물 음식",
@@ -32,6 +46,9 @@ const examples = [
   "든든한 고기 메뉴",
   "상큼하고 가벼운 음식",
 ];
+
+const API_BASE =
+  process.env.NEXT_PUBLIC_MENU_API_BASE ?? "http://127.0.0.1:8000";
 
 function formatScore(value: number) {
   return `${Math.round(value * 100)}점`;
@@ -43,7 +60,13 @@ export default function Home() {
   const [data, setData] = useState<RecommendationResponse | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(false);
   const [error, setError] = useState("");
+  const [imageError, setImageError] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
+  const [imageAnalysis, setImageAnalysis] = useState<ImageAnalysis | null>(
+    null,
+  );
 
   useEffect(() => {
     let ignore = false;
@@ -52,9 +75,13 @@ export default function Home() {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(
-          `/api/recommend?q=${encodeURIComponent(submittedQuery)}`,
-        );
+        const response = await fetch(`${API_BASE}/recommend/text`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ query: submittedQuery }),
+        });
         if (!response.ok) throw new Error(`API ${response.status}`);
         const payload = (await response.json()) as RecommendationResponse;
         if (!ignore) {
@@ -102,6 +129,42 @@ export default function Home() {
     setSubmittedQuery(example);
   }
 
+  async function handleImageUpload(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const input = form.elements.namedItem("foodImage") as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) {
+      setImageError("이미지 파일을 먼저 선택해 주세요.");
+      return;
+    }
+
+    setImageLoading(true);
+    setImageError("");
+    setImageAnalysis(null);
+    setImagePreview(URL.createObjectURL(file));
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch(`${API_BASE}/recommend/image`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) throw new Error(`API ${response.status}`);
+      const payload = (await response.json()) as ImageRecommendationResponse;
+      setImageAnalysis(payload.analysis);
+      setData(payload.recommendation);
+      setSubmittedQuery(payload.analysis.query);
+      setQuery(payload.analysis.query);
+      setSelectedId(payload.recommendation.results[0]?.id ?? null);
+    } catch (err) {
+      setImageError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setImageLoading(false);
+    }
+  }
+
   return (
     <main className={styles.shell}>
       <section className={styles.hero}>
@@ -126,6 +189,54 @@ export default function Home() {
             <button type="submit">추천</button>
           </div>
         </form>
+      </section>
+
+      <section className={styles.imageSection}>
+        <form className={styles.imageUpload} onSubmit={handleImageUpload}>
+          <div>
+            <p className={styles.eyebrow}>Image to Menu</p>
+            <h2>음식 이미지로 메뉴 맞추기</h2>
+            <p>
+              이미지를 업로드하면 Python FastAPI가 음식을 추정하고, 기존 CSV 메뉴
+              추천 로직과 연결해 비슷한 메뉴를 보여줍니다.
+            </p>
+          </div>
+          <label className={styles.fileDrop}>
+            <input name="foodImage" type="file" accept="image/*" />
+            <span>이미지 선택</span>
+            <small>
+              OPENAI_API_KEY가 있으면 Vision 모델을 사용하고, 없으면 파일명 기반
+              fallback으로 동작합니다.
+            </small>
+          </label>
+          <button type="submit" disabled={imageLoading}>
+            {imageLoading ? "분석 중" : "이미지 분석"}
+          </button>
+        </form>
+
+        {imagePreview || imageAnalysis || imageError ? (
+          <div className={styles.imageResult}>
+            {imagePreview ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={imagePreview} alt="업로드한 음식 미리보기" />
+            ) : null}
+            <div>
+              {imageAnalysis ? (
+                <>
+                  <span>{imageAnalysis.provider}</span>
+                  <h3>{imageAnalysis.detectedName}</h3>
+                  <p>{imageAnalysis.note}</p>
+                  <div className={styles.keywordList}>
+                    {imageAnalysis.visualKeywords.map((keyword) => (
+                      <span key={keyword}>{keyword}</span>
+                    ))}
+                  </div>
+                </>
+              ) : null}
+              {imageError ? <p className={styles.error}>{imageError}</p> : null}
+            </div>
+          </div>
+        ) : null}
       </section>
 
       <section className={styles.exampleBar} aria-label="예시 검색어">
@@ -217,9 +328,9 @@ export default function Home() {
               <div className={styles.note}>
                 <strong>추천 이유</strong>
                 <p>
-                  입력 문장의 토큰과 메뉴 설명의 TF-IDF 유사도를 먼저 계산하고,
-                  해장/칼칼함/다이어트 같은 표현은 관련 키워드로 확장해 약간의
-                  보정 점수를 더했습니다.
+                  입력 문장 또는 이미지 분석 결과를 Python FastAPI로 보내고,
+                  메뉴 설명의 TF-IDF 유사도와 의도 키워드 보정 점수를 함께
+                  계산했습니다.
                 </p>
               </div>
             </>
