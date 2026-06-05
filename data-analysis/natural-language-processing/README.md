@@ -20,6 +20,9 @@
 - Okt / Kkma 비교
 - TF-IDF와 코사인 유사도 연결
 - 고시원 FAQ 추천 실험 아이디어
+- 네이버 뉴스 Open API 연동
+- RSS XML 파싱
+- Next.js 기반 뉴스 검색 UI
 
 ## Portfolio Direction
 
