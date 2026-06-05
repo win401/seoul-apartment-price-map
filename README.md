@@ -10,6 +10,16 @@ Repository:
 https://github.com/win401/ai-service-practice-lab
 ```
 
+## Workflow
+
+새 수업 실습은 `Python-first, Next.js-frontend` 원칙으로 진행합니다.
+
+- Python/Jupyter: 수업 코드, 데이터 처리, ML/NLP 로직
+- FastAPI: Python 로직을 API로 제공
+- Next.js: 사용자 화면과 결과 시각화
+
+자세한 기준은 [docs/practice-workflow.md](docs/practice-workflow.md)를 따릅니다.
+
 ## Current Projects
 
 ### 1. Seoul Apartment Price Map
