@@ -60,7 +60,7 @@ https://github.com/win401/ai-service-practice-lab
 
 ### 3. Korean Menu Recommender
 
-맛집 메뉴 CSV 데이터를 이용해 `해장 잘되는 음식`, `칼칼한 음식`, `다이어트에 좋은 음식` 같은 자연어 입력에 맞는 메뉴를 추천하고, 음식 이미지 업로드로 메뉴를 추정하는 자연어 처리/멀티모달 실습 프로젝트입니다.
+맛집 메뉴 CSV 데이터를 이용해 `해장 잘되는 음식`, `칼칼한 음식`, `다이어트에 좋은 음식` 같은 자연어 입력에 맞는 메뉴를 추천하고, 레시피/칼로리/영양 포인트를 함께 보여주는 자연어 처리 실습 프로젝트입니다.
 
 - Local App: `http://localhost:3012`
 - Project Path: `data-analysis/natural-language-processing/2026-06-05-korean-tokenization-practice/`
@@ -74,7 +74,8 @@ https://github.com/win401/ai-service-practice-lab
 - TF-IDF 벡터 생성
 - 코사인 유사도 기반 메뉴 랭킹
 - 해장/칼칼함/다이어트 등 의도 키워드 확장
-- 음식 이미지 업로드 및 Vision API/fallback 연동
+- 레시피, 예상 칼로리, 영양 포인트 정보 노출
+- 음식 이미지 업로드 기능은 추후 재활성화를 위해 주석 처리
 - 추천 이유와 점수 분해 UI 구현
 
 ## Repository Structure

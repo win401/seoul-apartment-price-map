@@ -65,6 +65,262 @@ INTENT_RULES = [
     },
 ]
 
+DEFAULT_FOOD_INFO = {
+    "calories": 650,
+    "servingSize": "1인분",
+    "difficulty": "보통",
+    "cookingTime": "30분",
+    "recipeSteps": [
+        "주재료를 먹기 좋은 크기로 손질합니다.",
+        "기본 양념이나 소스를 준비합니다.",
+        "재료를 익힌 뒤 간을 맞춰 완성합니다.",
+    ],
+    "nutritionNotes": ["메뉴별 영양 정보가 없을 때 사용하는 기본 추정값입니다."],
+}
+
+FOOD_INFO = {
+    "된장찌개": {
+        "calories": 430,
+        "servingSize": "1인분",
+        "difficulty": "쉬움",
+        "cookingTime": "25분",
+        "recipeSteps": [
+            "멸치 육수나 물에 된장을 풀어 끓입니다.",
+            "두부, 애호박, 양파, 버섯을 넣고 익힙니다.",
+            "청양고추와 대파를 넣어 간을 맞춥니다.",
+        ],
+        "nutritionNotes": ["단백질과 채소를 함께 먹기 좋습니다.", "나트륨은 된장 양에 따라 높아질 수 있습니다."],
+    },
+    "김치찌개": {
+        "calories": 520,
+        "servingSize": "1인분",
+        "difficulty": "쉬움",
+        "cookingTime": "30분",
+        "recipeSteps": [
+            "잘 익은 김치와 돼지고기를 먼저 볶습니다.",
+            "물이나 육수를 붓고 충분히 끓입니다.",
+            "두부, 대파, 고춧가루를 넣어 칼칼하게 마무리합니다.",
+        ],
+        "nutritionNotes": ["해장용 국물 메뉴로 잘 어울립니다.", "김치와 국물 때문에 나트륨 섭취에 주의합니다."],
+    },
+    "비빔밥": {
+        "calories": 590,
+        "servingSize": "1그릇",
+        "difficulty": "보통",
+        "cookingTime": "35분",
+        "recipeSteps": [
+            "나물과 채소를 각각 데치거나 볶아 준비합니다.",
+            "밥 위에 채소, 달걀, 고추장을 올립니다.",
+            "참기름을 넣고 골고루 비벼 먹습니다.",
+        ],
+        "nutritionNotes": ["채소 섭취량을 늘리기 좋습니다.", "고추장과 참기름 양을 줄이면 더 가볍게 먹을 수 있습니다."],
+    },
+    "갈비탕": {
+        "calories": 700,
+        "servingSize": "1그릇",
+        "difficulty": "어려움",
+        "cookingTime": "2시간 이상",
+        "recipeSteps": [
+            "갈비의 핏물을 빼고 한 번 데칩니다.",
+            "무, 대파, 마늘과 함께 오래 끓입니다.",
+            "국물 기름을 걷고 소금과 후추로 간합니다.",
+        ],
+        "nutritionNotes": ["단백질이 풍부하고 든든합니다.", "국물과 고기 지방 섭취량을 조절하면 좋습니다."],
+    },
+    "삼겹살": {
+        "calories": 900,
+        "servingSize": "1인분 180g",
+        "difficulty": "쉬움",
+        "cookingTime": "15분",
+        "recipeSteps": [
+            "팬이나 불판을 충분히 달굽니다.",
+            "삼겹살을 앞뒤로 노릇하게 굽습니다.",
+            "쌈채소, 마늘, 쌈장과 함께 곁들입니다.",
+        ],
+        "nutritionNotes": ["지방 함량이 높은 편입니다.", "쌈채소와 함께 먹으면 식이섬유를 보완할 수 있습니다."],
+    },
+    "마르게리타피자": {
+        "calories": 780,
+        "servingSize": "1판 기준 일부",
+        "difficulty": "보통",
+        "cookingTime": "25분",
+        "recipeSteps": [
+            "도우에 토마토소스를 얇게 바릅니다.",
+            "모짜렐라 치즈와 바질을 올립니다.",
+            "오븐에서 치즈가 녹을 때까지 굽습니다.",
+        ],
+        "nutritionNotes": ["치즈로 인한 지방과 나트륨이 있습니다.", "토마토와 바질 향이 산뜻한 편입니다."],
+    },
+    "페퍼로니피자": {
+        "calories": 920,
+        "servingSize": "1판 기준 일부",
+        "difficulty": "보통",
+        "cookingTime": "25분",
+        "recipeSteps": [
+            "도우에 토마토소스를 바릅니다.",
+            "치즈와 페퍼로니를 넉넉히 올립니다.",
+            "오븐에서 바삭하게 구워 완성합니다.",
+        ],
+        "nutritionNotes": ["열량과 나트륨이 높은 편입니다.", "매콤하고 짭조름한 맛이 강합니다."],
+    },
+    "까르보나라": {
+        "calories": 820,
+        "servingSize": "1접시",
+        "difficulty": "보통",
+        "cookingTime": "25분",
+        "recipeSteps": [
+            "파스타 면을 삶습니다.",
+            "베이컨을 볶고 크림 또는 달걀 소스를 준비합니다.",
+            "면과 소스를 섞어 농도를 맞춥니다.",
+        ],
+        "nutritionNotes": ["크림과 베이컨으로 열량이 높은 편입니다.", "고소하고 부드러운 메뉴를 원할 때 적합합니다."],
+    },
+    "토마토파스타": {
+        "calories": 620,
+        "servingSize": "1접시",
+        "difficulty": "쉬움",
+        "cookingTime": "25분",
+        "recipeSteps": [
+            "파스타 면을 삶습니다.",
+            "올리브오일에 마늘과 토마토소스를 볶습니다.",
+            "면을 넣고 소스가 배도록 섞습니다.",
+        ],
+        "nutritionNotes": ["크림 파스타보다 상대적으로 가벼운 편입니다.", "토마토의 산미가 깔끔합니다."],
+    },
+    "스테이크": {
+        "calories": 750,
+        "servingSize": "1인분",
+        "difficulty": "보통",
+        "cookingTime": "20분",
+        "recipeSteps": [
+            "고기에 소금과 후추로 밑간합니다.",
+            "강한 불에서 겉면을 먼저 굽습니다.",
+            "원하는 굽기로 익힌 뒤 잠시 레스팅합니다.",
+        ],
+        "nutritionNotes": ["단백질이 풍부합니다.", "소스와 버터 사용량에 따라 열량이 달라집니다."],
+    },
+    "함박스테이크": {
+        "calories": 780,
+        "servingSize": "1인분",
+        "difficulty": "보통",
+        "cookingTime": "35분",
+        "recipeSteps": [
+            "다진 고기와 양파, 빵가루를 섞어 반죽합니다.",
+            "패티를 빚어 팬에 굽습니다.",
+            "데미글라스 소스를 곁들여 완성합니다.",
+        ],
+        "nutritionNotes": ["단백질과 지방이 함께 높은 편입니다.", "소스 당류와 나트륨을 조절하면 좋습니다."],
+    },
+    "초밥": {
+        "calories": 520,
+        "servingSize": "8~10피스",
+        "difficulty": "어려움",
+        "cookingTime": "40분",
+        "recipeSteps": [
+            "식초로 간한 밥을 준비합니다.",
+            "생선이나 재료를 얇게 손질합니다.",
+            "밥 위에 재료를 올려 모양을 잡습니다.",
+        ],
+        "nutritionNotes": ["밥 비중이 있어 탄수화물이 포함됩니다.", "간장 사용량에 따라 나트륨이 증가합니다."],
+    },
+    "라멘": {
+        "calories": 760,
+        "servingSize": "1그릇",
+        "difficulty": "보통",
+        "cookingTime": "30분",
+        "recipeSteps": [
+            "육수를 데우고 면을 삶습니다.",
+            "그릇에 소스와 육수를 담습니다.",
+            "면, 차슈, 달걀, 파를 올립니다.",
+        ],
+        "nutritionNotes": ["국물 나트륨이 높은 편입니다.", "든든하고 진한 국물 메뉴입니다."],
+    },
+    "돈카츠": {
+        "calories": 830,
+        "servingSize": "1접시",
+        "difficulty": "보통",
+        "cookingTime": "30분",
+        "recipeSteps": [
+            "돼지고기를 두드려 소금과 후추로 밑간합니다.",
+            "밀가루, 달걀, 빵가루 순서로 입힙니다.",
+            "기름에 바삭하게 튀깁니다.",
+        ],
+        "nutritionNotes": ["튀김 메뉴라 열량이 높은 편입니다.", "샐러드와 함께 먹으면 균형을 맞추기 좋습니다."],
+    },
+    "짬뽕": {
+        "calories": 690,
+        "servingSize": "1그릇",
+        "difficulty": "보통",
+        "cookingTime": "30분",
+        "recipeSteps": [
+            "해산물과 채소를 센 불에 볶습니다.",
+            "고춧가루와 육수를 넣어 얼큰하게 끓입니다.",
+            "삶은 면을 담고 국물을 부어 완성합니다.",
+        ],
+        "nutritionNotes": ["칼칼하고 시원한 국물 메뉴입니다.", "국물 섭취량을 조절하면 나트륨을 줄일 수 있습니다."],
+    },
+    "짜장면": {
+        "calories": 760,
+        "servingSize": "1그릇",
+        "difficulty": "보통",
+        "cookingTime": "30분",
+        "recipeSteps": [
+            "돼지고기와 양파를 볶습니다.",
+            "춘장을 볶아 소스를 만듭니다.",
+            "삶은 면 위에 소스를 얹습니다.",
+        ],
+        "nutritionNotes": ["탄수화물과 소스 열량이 높은 편입니다.", "단맛과 짭조름한 맛이 강합니다."],
+    },
+    "마파두부": {
+        "calories": 580,
+        "servingSize": "1접시",
+        "difficulty": "보통",
+        "cookingTime": "25분",
+        "recipeSteps": [
+            "다진 고기와 두반장을 볶습니다.",
+            "두부와 육수를 넣어 끓입니다.",
+            "전분물로 농도를 맞춰 마무리합니다.",
+        ],
+        "nutritionNotes": ["두부 단백질을 섭취하기 좋습니다.", "매운맛과 나트륨이 강할 수 있습니다."],
+    },
+    "쌀국수": {
+        "calories": 480,
+        "servingSize": "1그릇",
+        "difficulty": "쉬움",
+        "cookingTime": "25분",
+        "recipeSteps": [
+            "쌀면을 불리거나 삶습니다.",
+            "소고기 육수를 데웁니다.",
+            "숙주, 고수, 고기를 올려 완성합니다.",
+        ],
+        "nutritionNotes": ["국수류 중 비교적 가볍게 먹기 좋습니다.", "국물 나트륨은 조절이 필요합니다."],
+    },
+    "팟타이": {
+        "calories": 700,
+        "servingSize": "1접시",
+        "difficulty": "보통",
+        "cookingTime": "25분",
+        "recipeSteps": [
+            "쌀국수면을 불립니다.",
+            "새우, 달걀, 숙주를 볶습니다.",
+            "소스와 면을 넣고 땅콩을 뿌립니다.",
+        ],
+        "nutritionNotes": ["새콤달콤하고 고소한 맛이 강합니다.", "소스 당류와 기름 사용량을 조절하면 좋습니다."],
+    },
+    "떡볶이": {
+        "calories": 650,
+        "servingSize": "1인분",
+        "difficulty": "쉬움",
+        "cookingTime": "20분",
+        "recipeSteps": [
+            "떡과 어묵을 준비합니다.",
+            "고추장, 고춧가루, 설탕으로 소스를 만듭니다.",
+            "재료를 소스에 졸여 매콤달콤하게 완성합니다.",
+        ],
+        "nutritionNotes": ["탄수화물 비중이 높은 간식형 메뉴입니다.", "매운맛과 당류 섭취량을 조절하면 좋습니다."],
+    },
+}
+
 
 def load_menus() -> list[dict[str, str]]:
     with DATA_PATH.open(encoding="utf-8-sig", newline="") as file:
@@ -161,6 +417,10 @@ def top_keywords(tokens: list[str], limit: int = 7) -> list[str]:
     return [keyword for keyword, _ in counts.most_common(limit)]
 
 
+def get_food_info(menu_name: str) -> dict:
+    return FOOD_INFO.get(menu_name, DEFAULT_FOOD_INFO)
+
+
 def recommend_menus(
     query: str,
     *,
@@ -202,6 +462,7 @@ def recommend_menus(
                 "intentScore": intent_score + image_bonus,
                 "matchedIntents": matched_intents,
                 "keywords": top_keywords(menu_tokens),
+                "foodInfo": get_food_info(menu["name"]),
             }
         )
 

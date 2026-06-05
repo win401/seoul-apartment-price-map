@@ -99,6 +99,7 @@
   font-weight: 800;
 }
 
+/* Image upload styles are paused with the image feature.
 .imageSection {
   display: grid;
   gap: 12px;
@@ -206,6 +207,7 @@
   font-size: 13px;
   font-weight: 900;
 }
+*/
 
 .statusGrid {
   display: grid;
@@ -371,7 +373,7 @@
 
 .scoreGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   margin-top: 20px;
 }
@@ -418,6 +420,74 @@
   padding: 7px 10px;
 }
 
+.foodInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.foodInfoGrid article,
+.recipeBlock {
+  padding: 16px;
+  border: 1px solid #eadccd;
+  border-radius: 8px;
+  background: #fffaf3;
+}
+
+.foodInfoGrid h3,
+.recipeBlock h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.foodInfoGrid dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.foodInfoGrid dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #eadccd;
+  padding-bottom: 8px;
+}
+
+.foodInfoGrid dt {
+  color: #796858;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.foodInfoGrid dd {
+  margin: 0;
+  color: #241b15;
+  font-weight: 900;
+}
+
+.foodInfoGrid ul,
+.recipeBlock ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+  color: #5d4f43;
+  line-height: 1.55;
+}
+
+.recipeBlock {
+  margin-top: 12px;
+}
+
+.recipeBlock p {
+  margin: 12px 0 0;
+  color: #8b6d55;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .note {
   padding: 14px;
   border: 0;
@@ -445,14 +515,9 @@
   .hero,
   .workspace,
   .statusGrid,
-  .imageUpload,
-  .imageResult {
+  .scoreGrid,
+  .foodInfoGrid {
     grid-template-columns: 1fr;
-  }
-
-  .imageResult img {
-    width: 100%;
-    height: 180px;
   }
 
   .resultPanel,

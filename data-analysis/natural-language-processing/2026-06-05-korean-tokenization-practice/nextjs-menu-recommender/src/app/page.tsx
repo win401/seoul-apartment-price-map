@@ -13,6 +13,14 @@ type Recommendation = {
   intentScore: number;
   matchedIntents: string[];
   keywords: string[];
+  foodInfo: {
+    calories: number;
+    servingSize: string;
+    difficulty: string;
+    cookingTime: string;
+    recipeSteps: string[];
+    nutritionNotes: string[];
+  };
 };
 
 type RecommendationResponse = {
@@ -24,19 +32,20 @@ type RecommendationResponse = {
   results: Recommendation[];
 };
 
-type ImageAnalysis = {
-  provider: string;
-  detectedName: string;
-  confidence: number;
-  visualKeywords: string[];
-  query: string;
-  note: string;
-};
-
-type ImageRecommendationResponse = {
-  analysis: ImageAnalysis;
-  recommendation: RecommendationResponse;
-};
+// Image upload is paused for now.
+// type ImageAnalysis = {
+//   provider: string;
+//   detectedName: string;
+//   confidence: number;
+//   visualKeywords: string[];
+//   query: string;
+//   note: string;
+// };
+//
+// type ImageRecommendationResponse = {
+//   analysis: ImageAnalysis;
+//   recommendation: RecommendationResponse;
+// };
 
 const examples = [
   "해장 잘되는 음식",
@@ -60,13 +69,12 @@ export default function Home() {
   const [data, setData] = useState<RecommendationResponse | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [imageLoading, setImageLoading] = useState(false);
   const [error, setError] = useState("");
-  const [imageError, setImageError] = useState("");
-  const [imagePreview, setImagePreview] = useState("");
-  const [imageAnalysis, setImageAnalysis] = useState<ImageAnalysis | null>(
-    null,
-  );
+  // Image upload is paused for now.
+  // const [imageLoading, setImageLoading] = useState(false);
+  // const [imageError, setImageError] = useState("");
+  // const [imagePreview, setImagePreview] = useState("");
+  // const [imageAnalysis, setImageAnalysis] = useState<ImageAnalysis | null>(null);
 
   useEffect(() => {
     let ignore = false;
@@ -129,41 +137,37 @@ export default function Home() {
     setSubmittedQuery(example);
   }
 
-  async function handleImageUpload(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const input = form.elements.namedItem("foodImage") as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) {
-      setImageError("이미지 파일을 먼저 선택해 주세요.");
-      return;
-    }
-
-    setImageLoading(true);
-    setImageError("");
-    setImageAnalysis(null);
-    setImagePreview(URL.createObjectURL(file));
-
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const response = await fetch(`${API_BASE}/recommend/image`, {
-        method: "POST",
-        body: formData,
-      });
-      if (!response.ok) throw new Error(`API ${response.status}`);
-      const payload = (await response.json()) as ImageRecommendationResponse;
-      setImageAnalysis(payload.analysis);
-      setData(payload.recommendation);
-      setSubmittedQuery(payload.analysis.query);
-      setQuery(payload.analysis.query);
-      setSelectedId(payload.recommendation.results[0]?.id ?? null);
-    } catch (err) {
-      setImageError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setImageLoading(false);
-    }
-  }
+  // Image upload is paused for now.
+  // async function handleImageUpload(event: FormEvent<HTMLFormElement>) {
+  //   event.preventDefault();
+  //   const form = event.currentTarget;
+  //   const input = form.elements.namedItem("foodImage") as HTMLInputElement;
+  //   const file = input.files?.[0];
+  //   if (!file) return;
+  //   setImageLoading(true);
+  //   setImageError("");
+  //   setImageAnalysis(null);
+  //   setImagePreview(URL.createObjectURL(file));
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("file", file);
+  //     const response = await fetch(`${API_BASE}/recommend/image`, {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+  //     if (!response.ok) throw new Error(`API ${response.status}`);
+  //     const payload = (await response.json()) as ImageRecommendationResponse;
+  //     setImageAnalysis(payload.analysis);
+  //     setData(payload.recommendation);
+  //     setSubmittedQuery(payload.analysis.query);
+  //     setQuery(payload.analysis.query);
+  //     setSelectedId(payload.recommendation.results[0]?.id ?? null);
+  //   } catch (err) {
+  //     setImageError(err instanceof Error ? err.message : String(err));
+  //   } finally {
+  //     setImageLoading(false);
+  //   }
+  // }
 
   return (
     <main className={styles.shell}>
@@ -191,53 +195,9 @@ export default function Home() {
         </form>
       </section>
 
-      <section className={styles.imageSection}>
-        <form className={styles.imageUpload} onSubmit={handleImageUpload}>
-          <div>
-            <p className={styles.eyebrow}>Image to Menu</p>
-            <h2>음식 이미지로 메뉴 맞추기</h2>
-            <p>
-              이미지를 업로드하면 Python FastAPI가 음식을 추정하고, 기존 CSV 메뉴
-              추천 로직과 연결해 비슷한 메뉴를 보여줍니다.
-            </p>
-          </div>
-          <label className={styles.fileDrop}>
-            <input name="foodImage" type="file" accept="image/*" />
-            <span>이미지 선택</span>
-            <small>
-              OPENAI_API_KEY가 있으면 Vision 모델을 사용하고, 없으면 파일명 기반
-              fallback으로 동작합니다.
-            </small>
-          </label>
-          <button type="submit" disabled={imageLoading}>
-            {imageLoading ? "분석 중" : "이미지 분석"}
-          </button>
-        </form>
-
-        {imagePreview || imageAnalysis || imageError ? (
-          <div className={styles.imageResult}>
-            {imagePreview ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={imagePreview} alt="업로드한 음식 미리보기" />
-            ) : null}
-            <div>
-              {imageAnalysis ? (
-                <>
-                  <span>{imageAnalysis.provider}</span>
-                  <h3>{imageAnalysis.detectedName}</h3>
-                  <p>{imageAnalysis.note}</p>
-                  <div className={styles.keywordList}>
-                    {imageAnalysis.visualKeywords.map((keyword) => (
-                      <span key={keyword}>{keyword}</span>
-                    ))}
-                  </div>
-                </>
-              ) : null}
-              {imageError ? <p className={styles.error}>{imageError}</p> : null}
-            </div>
-          </div>
-        ) : null}
-      </section>
+      {/* Image upload is paused for now.
+      <section className={styles.imageSection}>...</section>
+      */}
 
       <section className={styles.exampleBar} aria-label="예시 검색어">
         {examples.map((example) => (
@@ -314,6 +274,14 @@ export default function Home() {
                   <span>의도 보정</span>
                   <strong>{formatScore(selected.intentScore)}</strong>
                 </article>
+                <article>
+                  <span>예상 칼로리</span>
+                  <strong>{selected.foodInfo.calories}kcal</strong>
+                </article>
+                <article>
+                  <span>조리 난이도</span>
+                  <strong>{selected.foodInfo.difficulty}</strong>
+                </article>
               </div>
 
               <div className={styles.keywordBlock}>
@@ -323,6 +291,40 @@ export default function Home() {
                     <span key={keyword}>{keyword}</span>
                   ))}
                 </div>
+              </div>
+
+              <div className={styles.foodInfoGrid}>
+                <article>
+                  <h3>기본 정보</h3>
+                  <dl>
+                    <div>
+                      <dt>1회 제공량</dt>
+                      <dd>{selected.foodInfo.servingSize}</dd>
+                    </div>
+                    <div>
+                      <dt>조리 시간</dt>
+                      <dd>{selected.foodInfo.cookingTime}</dd>
+                    </div>
+                  </dl>
+                </article>
+                <article>
+                  <h3>영양 포인트</h3>
+                  <ul>
+                    {selected.foodInfo.nutritionNotes.map((note) => (
+                      <li key={note}>{note}</li>
+                    ))}
+                  </ul>
+                </article>
+              </div>
+
+              <div className={styles.recipeBlock}>
+                <h3>간단 레시피</h3>
+                <ol>
+                  {selected.foodInfo.recipeSteps.map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+                <p>칼로리는 실습용 추정값이며 실제 재료와 양에 따라 달라집니다.</p>
               </div>
 
               <div className={styles.note}>

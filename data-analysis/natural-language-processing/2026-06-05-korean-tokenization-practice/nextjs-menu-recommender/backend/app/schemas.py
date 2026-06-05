@@ -5,6 +5,15 @@ class TextRecommendRequest(BaseModel):
     query: str = "해장 잘되는 음식"
 
 
+class FoodInfo(BaseModel):
+    calories: int
+    servingSize: str
+    difficulty: str
+    cookingTime: str
+    recipeSteps: list[str]
+    nutritionNotes: list[str]
+
+
 class MenuRecommendation(BaseModel):
     id: str
     name: str
@@ -15,6 +24,7 @@ class MenuRecommendation(BaseModel):
     intentScore: float
     matchedIntents: list[str]
     keywords: list[str]
+    foodInfo: FoodInfo
 
 
 class RecommendationResponse(BaseModel):
