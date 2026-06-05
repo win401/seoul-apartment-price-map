@@ -9,8 +9,16 @@
 ## Data Source Priority
 
 1. `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET`이 있으면 Naver Search Open API 사용
-2. 키가 없으면 Naver News RSS 시도
+2. 키가 없으면 RSS 시도: Naver News RSS → Google News RSS
 3. 네트워크/도메인 호출 실패 시 샘플 기사로 fallback
+
+화면에서 뉴스 소스를 직접 선택할 수도 있습니다.
+
+| Mode | Meaning |
+|---|---|
+| 자동 | Open API 우선, 실패 시 RSS |
+| Open API | Naver Search Open API만 사용 |
+| RSS | Naver/Google News RSS XML을 파싱 |
 
 ## Run
 
@@ -40,4 +48,5 @@ NAVER_CLIENT_SECRET=your_client_secret
 - TF-IDF 벡터 생성
 - 코사인 유사도 계산
 - 뉴스 검색 결과 ranking
+- Open API와 RSS 데이터 소스 비교
 - Gradio UI를 Next.js UI로 전환

@@ -5,7 +5,7 @@ export type NewsArticle = {
   description: string;
   link: string;
   pubDate?: string;
-  source: "naver-openapi" | "naver-rss" | "sample";
+  source: "naver-openapi" | "naver-rss" | "google-news-rss" | "sample";
 };
 
 export type KeywordScore = {
@@ -24,11 +24,14 @@ export type NewsSearchResponse = {
   generatedAt: string;
   source: NewsArticle["source"];
   sourceLabel: string;
+  requestedSource: NewsSourceMode;
   articles: NewsArticle[];
   results: SearchResult[];
   tokenizedQuery: string[];
   warning?: string;
 };
+
+export type NewsSourceMode = "auto" | "openapi" | "rss";
 
 const STOPWORDS = new Set([
   "이",
@@ -213,7 +216,10 @@ function topKeywords(vector: Map<string, number>, limit = 5): KeywordScore[] {
     .map(([keyword, score]) => ({ keyword, score }));
 }
 
-function parseNaverRss(xml: string): NewsArticle[] {
+function parseRss(
+  xml: string,
+  source: Extract<NewsArticle["source"], "naver-rss" | "google-news-rss">,
+): NewsArticle[] {
   const itemMatches = xml.match(/<item>[\s\S]*?<\/item>/g) ?? [];
   return itemMatches.slice(0, 20).map((item, index) => {
     const readTag = (tag: string) => {
@@ -225,13 +231,13 @@ function parseNaverRss(xml: string): NewsArticle[] {
     const link = readTag("link");
     const pubDate = readTag("pubDate");
     return {
-      id: `rss-${index}-${link || title}`,
+      id: `${source}-${index}-${link || title}`,
       title,
-      category: "네이버뉴스",
+      category: source === "naver-rss" ? "네이버뉴스 RSS" : "Google News RSS",
       description,
       link,
       pubDate,
-      source: "naver-rss" as const,
+      source,
     };
   });
 }
@@ -291,16 +297,83 @@ async function fetchNaverOpenApi(query: string) {
 }
 
 async function fetchNaverRss(query: string) {
-  const rssUrl = `https://newssearch.naver.com/search.naver?where=rss&query=${encodeURIComponent(
+  const rssUrl = `https://search.naver.com/search.naver?where=rss&query=${encodeURIComponent(
     query,
   )}`;
   const response = await fetchWithTimeout(rssUrl);
   if (!response.ok) throw new Error(`Naver RSS ${response.status}`);
   const xml = await response.text();
-  return parseNaverRss(xml);
+  return parseRss(xml, "naver-rss");
 }
 
-async function fetchNews(query: string) {
+async function fetchGoogleNewsRss(query: string) {
+  const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(
+    query,
+  )}&hl=ko&gl=KR&ceid=KR:ko`;
+  const response = await fetchWithTimeout(rssUrl);
+  if (!response.ok) throw new Error(`Google News RSS ${response.status}`);
+  const xml = await response.text();
+  return parseRss(xml, "google-news-rss");
+}
+
+async function fetchRssArticles(query: string) {
+  const errors: unknown[] = [];
+
+  try {
+    const naverArticles = await fetchNaverRss(query);
+    if (naverArticles.length) {
+      return {
+        articles: naverArticles,
+        provider: "Naver News RSS",
+      };
+    }
+  } catch (error) {
+    errors.push(error);
+    console.warn(error);
+  }
+
+  try {
+    const googleArticles = await fetchGoogleNewsRss(query);
+    if (googleArticles.length) {
+      return {
+        articles: googleArticles,
+        provider: "Google News RSS",
+      };
+    }
+  } catch (error) {
+    errors.push(error);
+    console.warn(error);
+  }
+
+  if (errors.length) {
+    throw new Error("RSS providers failed");
+  }
+
+  return null;
+}
+
+async function fetchNews(query: string, sourceMode: NewsSourceMode) {
+  if (sourceMode === "rss") {
+    try {
+      const rssResult = await fetchRssArticles(query);
+      if (rssResult?.articles.length) {
+        return {
+          articles: rssResult.articles,
+          warning:
+            `${rssResult.provider} 모드로 실행했습니다. 공식 검색 API가 아니라 RSS XML을 파싱한 결과입니다.`,
+        };
+      }
+    } catch (error) {
+      console.warn(error);
+    }
+
+    return {
+      articles: SAMPLE_ARTICLES,
+      warning:
+        "네이버 RSS 호출에 실패해 샘플 기사로 실행했습니다. 네트워크 또는 RSS 응답 형식을 확인해야 합니다.",
+    };
+  }
+
   try {
     const openApiArticles = await fetchNaverOpenApi(query);
     if (openApiArticles?.length) {
@@ -313,30 +386,45 @@ async function fetchNews(query: string) {
     console.warn(error);
   }
 
-  try {
-    const rssArticles = await fetchNaverRss(query);
-    if (rssArticles.length) {
-      return {
-        articles: rssArticles,
-        warning:
-          "NAVER_CLIENT_ID/SECRET이 없어 비공식 RSS 경로를 사용했습니다.",
-      };
+  if (sourceMode === "auto") {
+    try {
+      const rssResult = await fetchRssArticles(query);
+      if (rssResult?.articles.length) {
+        return {
+          articles: rssResult.articles,
+          warning:
+            `NAVER_CLIENT_ID/SECRET이 없거나 Open API 호출이 실패해 ${rssResult.provider} 경로를 사용했습니다.`,
+        };
+      }
+    } catch (error) {
+      console.warn(error);
     }
-  } catch (error) {
-    console.warn(error);
   }
 
   return {
     articles: SAMPLE_ARTICLES,
     warning:
-      "네이버 뉴스 호출에 실패해 샘플 기사로 실행했습니다. 실시간 뉴스는 네트워크 또는 NAVER_CLIENT_ID/SECRET 설정이 필요합니다.",
+      sourceMode === "openapi"
+        ? "Naver Open API 호출에 실패해 샘플 기사로 실행했습니다. NAVER_CLIENT_ID/SECRET 값과 API 권한을 확인해야 합니다."
+        : "네이버 뉴스 호출에 실패해 샘플 기사로 실행했습니다. 실시간 뉴스는 네트워크 또는 NAVER_CLIENT_ID/SECRET 설정이 필요합니다.",
   };
 }
 
-export async function searchNews(query: string): Promise<NewsSearchResponse> {
+export async function searchNews(
+  query: string,
+  sourceMode: NewsSourceMode = "auto",
+): Promise<NewsSearchResponse> {
   const safeQuery = query.trim() || "인공지능";
-  const { articles, warning } = await fetchNews(safeQuery);
-  const documents = [safeQuery, ...articles.map((a) => `${a.title} ${a.description}`)];
+  const safeSourceMode: NewsSourceMode = ["auto", "openapi", "rss"].includes(
+    sourceMode,
+  )
+    ? sourceMode
+    : "auto";
+  const { articles, warning } = await fetchNews(safeQuery, safeSourceMode);
+  const documents = [
+    safeQuery,
+    ...articles.map((a) => `${a.title} ${a.description}`),
+  ];
   const tokenDocs = documents.map(tokenizeKorean);
   const vectors = buildTfidfVectors(tokenDocs);
   const queryVector = vectors[0];
@@ -357,6 +445,8 @@ export async function searchNews(query: string): Promise<NewsSearchResponse> {
       ? "Naver Open API"
       : source === "naver-rss"
         ? "Naver News RSS"
+        : source === "google-news-rss"
+          ? "Google News RSS"
         : "Sample Data";
 
   return {
@@ -364,6 +454,7 @@ export async function searchNews(query: string): Promise<NewsSearchResponse> {
     generatedAt: new Date().toISOString(),
     source,
     sourceLabel,
+    requestedSource: safeSourceMode,
     articles,
     results,
     tokenizedQuery: tokenDocs[0],

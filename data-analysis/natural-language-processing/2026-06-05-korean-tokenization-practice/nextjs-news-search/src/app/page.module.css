@@ -77,6 +77,67 @@
   font-weight: 900;
 }
 
+.sourceSelector {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 3px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.sourceSelector legend {
+  grid-column: 1 / -1;
+  margin-bottom: 1px;
+  color: #5e6d66;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.sourceSelector label {
+  display: block;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.sourceSelector input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sourceSelector span {
+  display: grid;
+  gap: 3px;
+  min-height: 58px;
+  padding: 9px 10px;
+  border: 1px solid #d9e5df;
+  border-radius: 8px;
+  background: #f8fbf9;
+}
+
+.sourceSelector input:checked + span {
+  border-color: #167255;
+  background: #eaf8f0;
+  box-shadow: inset 0 0 0 1px #167255;
+}
+
+.sourceSelector strong,
+.sourceSelector small {
+  overflow-wrap: anywhere;
+}
+
+.sourceSelector strong {
+  color: #17211c;
+  font-size: 13px;
+}
+
+.sourceSelector small {
+  color: #6a7a72;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
 .statusGrid {
   display: grid;
   grid-template-columns: 220px 1fr 180px;
@@ -331,6 +392,10 @@
   }
 
   .statusGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sourceSelector {
     grid-template-columns: 1fr;
   }
 

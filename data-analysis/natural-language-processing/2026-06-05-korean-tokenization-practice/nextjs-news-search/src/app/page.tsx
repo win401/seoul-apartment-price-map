@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import styles from "./page.module.css";
+import { FormEvent, useEffect, useMemo, useState } from 'react';
+import styles from './page.module.css';
 
 type KeywordScore = {
   keyword: string;
@@ -15,45 +15,73 @@ type SearchResult = {
   description: string;
   link: string;
   pubDate?: string;
-  source: "naver-openapi" | "naver-rss" | "sample";
+  source: 'naver-openapi' | 'naver-rss' | 'google-news-rss' | 'sample';
   similarity: number;
   keywords: KeywordScore[];
   tokens: string[];
 };
 
+type NewsSourceMode = 'auto' | 'openapi' | 'rss';
+
 type NewsResponse = {
   query: string;
   generatedAt: string;
   sourceLabel: string;
+  requestedSource: NewsSourceMode;
   results: SearchResult[];
   tokenizedQuery: string[];
   warning?: string;
 };
 
-const initialQuery = "인공지능";
+const initialQuery = '인공지능';
+
+const sourceOptions: Array<{
+  value: NewsSourceMode;
+  label: string;
+  description: string;
+}> = [
+  {
+    value: 'auto',
+    label: '자동',
+    description: 'Open API 우선, 실패 시 RSS',
+  },
+  {
+    value: 'openapi',
+    label: 'Open API',
+    description: '공식 검색 API만 사용',
+  },
+  {
+    value: 'rss',
+    label: 'RSS',
+    description: 'RSS XML 파싱',
+  },
+];
 
 function formatScore(value: number) {
   return `${(value * 100).toFixed(1)}%`;
 }
 
 function formatDate(value?: string) {
-  if (!value) return "날짜 없음";
+  if (!value) return '날짜 없음';
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat("ko-KR", {
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
+  return new Intl.DateTimeFormat('ko-KR', {
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
   }).format(date);
 }
 
 export default function Home() {
   const [query, setQuery] = useState(initialQuery);
   const [submittedQuery, setSubmittedQuery] = useState(initialQuery);
+  const [sourceMode, setSourceMode] = useState<NewsSourceMode>('auto');
+  const [submittedSourceMode, setSubmittedSourceMode] =
+    useState<NewsSourceMode>('auto');
   const [data, setData] = useState<NewsResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -61,10 +89,12 @@ export default function Home() {
 
     async function load() {
       setLoading(true);
-      setError("");
+      setError('');
       try {
         const response = await fetch(
-          `/api/news?q=${encodeURIComponent(submittedQuery)}`,
+          `/api/news?q=${encodeURIComponent(
+            submittedQuery,
+          )}&source=${submittedSourceMode}`,
         );
         if (!response.ok) throw new Error(`API ${response.status}`);
         const payload = (await response.json()) as NewsResponse;
@@ -85,7 +115,7 @@ export default function Home() {
     return () => {
       ignore = true;
     };
-  }, [submittedQuery]);
+  }, [submittedQuery, submittedSourceMode]);
 
   const selected = useMemo(() => {
     if (!data) return null;
@@ -115,6 +145,7 @@ export default function Home() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmittedQuery(query);
+    setSubmittedSourceMode(sourceMode);
   }
 
   return (
@@ -124,8 +155,8 @@ export default function Home() {
           <p className={styles.eyebrow}>Korean TF-IDF News Search</p>
           <h1>네이버 뉴스 TF-IDF 검색 시스템</h1>
           <p>
-            Gradio 대신 Next.js로 만든 실습 화면이다. 검색어를 토큰화하고,
-            최신 뉴스 기사와의 TF-IDF 코사인 유사도를 계산한다.
+            Gradio 대신 Next.js로 만든 실습 화면이다. 검색어를 토큰화하고, 최신
+            뉴스 기사와의 TF-IDF 코사인 유사도를 계산한다.
           </p>
         </div>
         <form className={styles.searchBox} onSubmit={handleSubmit}>
@@ -135,21 +166,42 @@ export default function Home() {
               id="query"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="예: 인공지능, 반도체, 고시원"
+              placeholder="예: 인공지능, 반도체"
             />
             <button type="submit">검색</button>
           </div>
+          <fieldset className={styles.sourceSelector}>
+            <legend>뉴스 소스</legend>
+            {sourceOptions.map((option) => (
+              <label key={option.value}>
+                <input
+                  type="radio"
+                  name="source"
+                  value={option.value}
+                  checked={sourceMode === option.value}
+                  onChange={() => setSourceMode(option.value)}
+                />
+                <span>
+                  <strong>{option.label}</strong>
+                  <small>{option.description}</small>
+                </span>
+              </label>
+            ))}
+          </fieldset>
         </form>
       </section>
 
       <section className={styles.statusGrid}>
         <article>
           <span>데이터 소스</span>
-          <strong>{data?.sourceLabel ?? "로딩 중"}</strong>
+          <strong>
+            {data?.sourceLabel ?? '로딩 중'}
+            {data ? ` · ${data.requestedSource}` : ''}
+          </strong>
         </article>
         <article>
           <span>검색어 토큰</span>
-          <strong>{data?.tokenizedQuery.join(" / ") || "-"}</strong>
+          <strong>{data?.tokenizedQuery.join(' / ') || '-'}</strong>
         </article>
         <article>
           <span>뉴스 수</span>
@@ -165,7 +217,9 @@ export default function Home() {
           <div className={styles.panelHeader}>
             <div>
               <h2>검색 결과</h2>
-              <p>{loading ? "뉴스를 불러오는 중" : `검색어: ${submittedQuery}`}</p>
+              <p>
+                {loading ? '뉴스를 불러오는 중' : `검색어: ${submittedQuery}`}
+              </p>
             </div>
           </div>
 
@@ -174,7 +228,7 @@ export default function Home() {
               <button
                 key={result.id}
                 className={`${styles.resultItem} ${
-                  selected?.id === result.id ? styles.selected : ""
+                  selected?.id === result.id ? styles.selected : ''
                 }`}
                 onClick={() => setSelectedId(result.id)}
               >
@@ -199,7 +253,7 @@ export default function Home() {
               </div>
               <h2>{selected.title}</h2>
               <p className={styles.description}>{selected.description}</p>
-              {selected.link.startsWith("#") ? null : (
+              {selected.link.startsWith('#') ? null : (
                 <a
                   className={styles.linkButton}
                   href={selected.link}
@@ -224,7 +278,7 @@ export default function Home() {
 
               <div className={styles.tokenBlock}>
                 <h3>토큰화 결과</h3>
-                <p>{selected.tokens.join(" / ")}</p>
+                <p>{selected.tokens.join(' / ')}</p>
               </div>
             </>
           ) : (
@@ -236,7 +290,10 @@ export default function Home() {
           <h2>전체 핵심 키워드</h2>
           <div className={styles.keywordCloud}>
             {topKeywords.map(([keyword, score]) => (
-              <span key={keyword} style={{ opacity: 0.58 + Math.min(score, 0.5) }}>
+              <span
+                key={keyword}
+                style={{ opacity: 0.58 + Math.min(score, 0.5) }}
+              >
                 {keyword}
               </span>
             ))}
@@ -246,8 +303,8 @@ export default function Home() {
             <strong>실습 포인트</strong>
             <p>
               현재 형태소 분석기는 JS 정규식 기반 간이 토큰화다. Python의 Okt,
-              Kkma, MeCab과 비교하면 한국어 조사/어미 분리 품질 차이를 확인할
-              수 있다.
+              Kkma, MeCab과 비교하면 한국어 조사/어미 분리 품질 차이를 확인할 수
+              있다.
             </p>
           </div>
         </aside>
