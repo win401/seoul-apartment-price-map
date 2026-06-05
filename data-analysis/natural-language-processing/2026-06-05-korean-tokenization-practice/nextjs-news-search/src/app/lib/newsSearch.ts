@@ -133,15 +133,16 @@ const SAMPLE_ARTICLES: NewsArticle[] = [
 ];
 
 function decodeHtml(text: string) {
-  return text
+  const decoded = text
     .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
-    .replace(/<[^>]+>/g, "")
     .replace(/&quot;/g, '"')
     .replace(/&apos;/g, "'")
     .replace(/&amp;/g, "&")
+    .replace(/&nbsp;/g, " ")
     .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .trim();
+    .replace(/&gt;/g, ">");
+
+  return decoded.replace(/<[^>]+>/g, "").trim();
 }
 
 function stripHtml(text: string) {
