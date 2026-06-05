@@ -39,6 +39,7 @@
 notebooks/
   01_korean_tokenization_practice.ipynb
   02_korean_tfidf_news_search_original.ipynb
+  03_menu_recommendation_tfidf_practice.ipynb
 
 notes/
   2026-06-05-korean-tokenization-summary.md
