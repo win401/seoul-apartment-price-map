@@ -35,6 +35,12 @@ data-analysis/
       outputs/                # 시각화 이미지
       notes/                  # 수업 요약 노트
       nextjs-map-prototype/   # 배포된 지도 서비스
+  natural-language-processing/
+    2026-06-05-korean-tokenization-practice/
+      notebooks/              # 한국어 토큰화 실습 노트북
+      notes/                  # 수업 요약 노트
+      reports/                # 실습 결과 리포트
+      outputs/                # 시각화/결과 이미지
 ai-service-planning/          # AI 서비스 기획 수업 자료
 assignments/                  # 과제 제출물
 notes/                        # 공통 수업 노트

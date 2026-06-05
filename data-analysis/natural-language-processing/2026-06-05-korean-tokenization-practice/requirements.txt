@@ -1,0 +1,5 @@
+konlpy
+scikit-learn
+pandas
+matplotlib
+seaborn
