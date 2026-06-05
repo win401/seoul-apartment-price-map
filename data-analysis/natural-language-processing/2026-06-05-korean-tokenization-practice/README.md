@@ -30,15 +30,22 @@
 8. TF-IDF 입력에 형태소 분석 결과 적용
 9. 코사인 유사도로 간단한 FAQ 유사도 비교
 10. 고시원 SaaS / 크몽 프로젝트 적용 아이디어 정리
+11. Gradio 실습 노트북을 Next.js 뉴스 검색 화면으로 전환
 
 ## Files
 
 ```text
 notebooks/
   01_korean_tokenization_practice.ipynb
+  02_korean_tfidf_news_search_original.ipynb
 
 notes/
   2026-06-05-korean-tokenization-summary.md
+
+nextjs-news-search/
+  src/app/api/news/route.ts
+  src/app/lib/newsSearch.ts
+  src/app/page.tsx
 
 reports/
   .gitkeep
@@ -72,3 +79,26 @@ data/
 ## Next Action
 
 Jupyter에서 `notebooks/01_korean_tokenization_practice.ipynb`를 열고 셀을 순서대로 실행한다.
+
+Next.js 뉴스 검색 앱을 실행하려면:
+
+```bash
+cd nextjs-news-search
+npm install
+npm run dev -- --port 3011
+```
+
+로컬 URL:
+
+```text
+http://localhost:3011
+```
+
+네이버 실시간 뉴스 연동은 `.env.local`에 아래 값을 넣으면 Naver Search Open API를 우선 사용한다.
+
+```bash
+NAVER_CLIENT_ID=your_client_id
+NAVER_CLIENT_SECRET=your_client_secret
+```
+
+키가 없거나 네트워크 호출이 실패하면 샘플 기사로 fallback하여 TF-IDF 검색 UI는 계속 동작한다.
