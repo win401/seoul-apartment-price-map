@@ -1,6 +1,9 @@
 # macOS
 .DS_Store
 
+# Office temporary files
+~$*.docx
+
 # Python
 __pycache__/
 *.py[cod]

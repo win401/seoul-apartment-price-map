@@ -78,6 +78,25 @@ https://github.com/win401/ai-service-practice-lab
 - 음식 이미지 업로드 기능은 추후 재활성화를 위해 주석 처리
 - 추천 이유와 점수 분해 UI 구현
 
+### 4. Few-Shot Movie Recommendation Chatbot
+
+영화 리뷰 감성분석 데이터를 이용해 사용자의 취향 문장과 유사한 리뷰를 검색하고, few-shot 예제와 함께 추천 프롬프트를 구성하는 실무 응용 프로젝트입니다.
+
+- Project Path: `data-analysis/practical_application/`
+- Web App: `data-analysis/practical_application/nextjs-movie-recommender/`
+- Backend: `data-analysis/practical_application/backend/`
+
+핵심 작업:
+
+- 수업 DOCX의 추천 챗봇 흐름을 코드로 재구성
+- `ratings_train.txt` 영화 리뷰 데이터 로딩
+- 간단한 한국어 토큰화
+- TF-IDF style 유사 리뷰 검색
+- 긍정/부정/중립 few-shot 예제 구성
+- 유사 리뷰와 few-shot 예제를 조합한 최종 프롬프트 생성
+- OpenAI API 키가 없을 때도 동작하는 fallback 추천
+- FastAPI backend + Next.js dev 화면 구현
+
 ## Repository Structure
 
 ```text
@@ -98,6 +117,13 @@ data-analysis/
       outputs/                # 시각화/결과 이미지
       nextjs-news-search/     # TF-IDF 뉴스 검색 Next.js 앱
       nextjs-menu-recommender/ # Python backend + Next.js 메뉴 추천 앱
+
+  practical_application/
+    docs/                      # 실습 지시서 DOCX
+    data/                      # 영화 리뷰 데이터
+    notebooks/                 # Few-shot 추천 실습 노트북
+    backend/                   # Python FastAPI 추천 backend
+    nextjs-movie-recommender/  # Few-shot 영화 추천 Next.js 앱
 
 ai-service-planning/          # AI 서비스 기획 수업 자료
 assignments/                  # 과제 제출물
