@@ -97,6 +97,26 @@ https://github.com/win401/ai-service-practice-lab
 - OpenAI API 키가 없을 때도 동작하는 fallback 추천
 - FastAPI backend + Next.js dev 화면 구현
 
+### 5. Multilingual Translation Lab
+
+Seq2Seq, BLEU, 사전학습 번역 모델 수업 예제를 바탕으로 Hugging Face NLLB 다국어 번역 모델, OpenAI 번역 비교, 파파고 기준 BLEU 평가, 법률 도메인 분석을 연결한 자연어 처리 실습 프로젝트입니다.
+
+- Local App: `http://localhost:3014`
+- Project Path: `data-analysis/natural-language-processing/2026-06-09-multilingual-translation/`
+- Backend: `data-analysis/natural-language-processing/2026-06-09-multilingual-translation/backend/`
+- Frontend: `data-analysis/natural-language-processing/2026-06-09-multilingual-translation/frontend/`
+
+핵심 작업:
+
+- 수업 제공 Seq2Seq / BLEU / pretrained translation 노트북 정리
+- Hugging Face `facebook/nllb-200-distilled-600M` 다국어 번역 API 구현
+- FastAPI backend + Next.js frontend 분리
+- 기준 번역문 입력 시 BLEU 점수와 품질 해석 표시
+- 파파고 기준 번역문 대비 NLLB / OpenAI 번역 품질 비교 페이지 구현
+- 도메인 실험실에서 일반, 법률, 금융, 의류/쇼핑 문장 처리
+- 법률 도메인에서 `EunB2/KL-RoBERTa` 기반 법률 문맥 유사도와 용어 매칭 분석
+- `.env` 기반 OpenAI API 키 관리와 `.env.example` 제공
+
 ## Repository Structure
 
 ```text
@@ -117,6 +137,14 @@ data-analysis/
       outputs/                # 시각화/결과 이미지
       nextjs-news-search/     # TF-IDF 뉴스 검색 Next.js 앱
       nextjs-menu-recommender/ # Python backend + Next.js 메뉴 추천 앱
+    2026-06-09-multilingual-translation/
+      notebooks/              # Seq2Seq / BLEU / pretrained translation 수업 노트북
+      backend/                # NLLB, OpenAI, BLEU, 법률 도메인 분석 FastAPI
+      frontend/               # 다국어 번역기 / 평가 / 도메인 실험실 Next.js 앱
+      data/                   # raw / processed placeholder
+      reports/                # 실습 리포트
+      outputs/                # 결과 산출물
+      notes/                  # 실습 노트
 
   practical_application/
     docs/                      # 실습 지시서 DOCX
@@ -201,4 +229,29 @@ uvicorn main:app --port 8000
 cd data-analysis/natural-language-processing/2026-06-05-korean-tokenization-practice/nextjs-menu-recommender
 npm install
 npm run dev -- --port 3012
+```
+
+다국어 번역 실습:
+
+```bash
+cd data-analysis/natural-language-processing/2026-06-09-multilingual-translation/backend
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --port 8000
+```
+
+다른 터미널에서:
+
+```bash
+cd data-analysis/natural-language-processing/2026-06-09-multilingual-translation/frontend
+npm install
+npm run dev -- --port 3014
+```
+
+OpenAI 비교 평가와 도메인 실험실을 사용하려면 `backend/.env`에 아래 값을 추가합니다.
+
+```bash
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_MODEL=gpt-5.2
 ```
