@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "source_language": "en",
+    "target_language": "ko",
+    "source_text": "Hello.",
+    "expected_text": "안녕하세요.",
+    "required_keywords": ["안녕"]
+  },
+  {
+    "id": 2,
+    "source_language": "en",
+    "target_language": "ko",
+    "source_text": "Thank you very much.",
+    "expected_text": "정말 감사합니다.",
+    "required_keywords": ["감사", "고마"]
+  },
+  {
+    "id": 3,
+    "source_language": "en",
+    "target_language": "ko",
+    "source_text": "I am studying artificial intelligence.",
+    "expected_text": "저는 인공지능을 공부하고 있습니다.",
+    "required_keywords": ["인공지능", "공부"]
+  },
+  {
+    "id": 4,
+    "source_language": "en",
+    "target_language": "ko",
+    "source_text": "Where is the nearest subway station?",
+    "expected_text": "가장 가까운 지하철역은 어디에 있나요?",
+    "required_keywords": ["지하철", "역", "어디"]
+  },
+  {
+    "id": 5,
+    "source_language": "en",
+    "target_language": "ko",
+    "source_text": "Please send me the meeting schedule.",
+    "expected_text": "회의 일정을 보내 주세요.",
+    "required_keywords": ["회의", "일정", "보내"]
+  },
+  {
+    "id": 6,
+    "source_language": "en",
+    "target_language": "ko",
+    "source_text": "This application supports multiple languages.",
+    "expected_text": "이 애플리케이션은 여러 언어를 지원합니다.",
+    "required_keywords": ["언어", "지원"]
+  },
+  {
+    "id": 7,
+    "source_language": "en",
+    "target_language": "ko",
+    "source_text": "The weather is nice today.",
+    "expected_text": "오늘 날씨가 좋습니다.",
+    "required_keywords": ["오늘", "날씨", "좋"]
+  },
+  {
+    "id": 8,
+    "source_language": "en",
+    "target_language": "ko",
+    "source_text": "Can you recommend a good restaurant?",
+    "expected_text": "좋은 식당을 추천해 주실 수 있나요?",
+    "required_keywords": ["식당", "추천"]
+  },
+  {
+    "id": 9,
+    "source_language": "en",
+    "target_language": "ko",
+    "source_text": "I want to build a portfolio project.",
+    "expected_text": "저는 포트폴리오 프로젝트를 만들고 싶습니다.",
+    "required_keywords": ["포트폴리오", "프로젝트", "만들"]
+  },
+  {
+    "id": 10,
+    "source_language": "en",
+    "target_language": "ko",
+    "source_text": "Translation quality can be evaluated with BLEU.",
+    "expected_text": "번역 품질은 BLEU로 평가할 수 있습니다.",
+    "required_keywords": ["번역", "품질", "BLEU", "평가"]
+  }
+]

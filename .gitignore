@@ -12,6 +12,16 @@ __pycache__/
 venv/
 env/
 
+# Node / Next.js
+node_modules/
+.next/
+
+# Secrets
+.env
+.env.local
+*.env
+!*.env.example
+
 # Jupyter
 */.ipynb_checkpoints/
 

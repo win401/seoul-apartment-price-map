@@ -4,6 +4,23 @@
 
 ## Practices
 
+### 2026-06-09 Multilingual Translation Practice
+
+위치:
+
+```text
+2026-06-09-multilingual-translation/
+```
+
+주제:
+
+- Seq2Seq Encoder-Decoder 구조
+- 영어-한국어 번역 기초 실습
+- BLEU 번역 품질 평가
+- Hugging Face 사전학습 번역 모델
+- FastAPI 기반 다국어 번역 API
+- Next.js 기반 번역기 UI
+
 ### 2026-06-05 Korean Tokenization Practice
 
 위치:
