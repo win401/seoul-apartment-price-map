@@ -38,6 +38,9 @@ type DomainResult = {
   } | null;
 };
 
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://127.0.0.1:8000';
+
 export default function DomainPage() {
   const [domain, setDomain] = useState('legal');
   const [task, setTask] = useState('explain');
@@ -54,7 +57,7 @@ export default function DomainPage() {
     setResult(null);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/domain/process', {
+      const response = await fetch(`${API_BASE_URL}/domain/process`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

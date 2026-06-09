@@ -29,6 +29,9 @@ type ArticleEvaluationResponse = {
 const DEFAULT_SOURCE_TEXT =
   'Artificial intelligence is changing how people communicate across languages. Researchers say translation tools are becoming faster and more accessible.';
 
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://127.0.0.1:8000';
+
 export default function EvaluationPage() {
   const [sourceText, setSourceText] = useState(DEFAULT_SOURCE_TEXT);
   const [referenceText, setReferenceText] = useState('');
@@ -42,7 +45,7 @@ export default function EvaluationPage() {
     setResult(null);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/evaluation/article', {
+      const response = await fetch(`${API_BASE_URL}/evaluation/article`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
